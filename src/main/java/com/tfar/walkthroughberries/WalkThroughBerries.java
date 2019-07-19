@@ -30,8 +30,8 @@ public class WalkThroughBerries {
       if (player.isSneaking()) {
         event.setCanceled(true);
       } else {
-        ItemStack pants = player.inventory.armorItemInSlot(1);
-        ItemStack shoes = player.inventory.armorItemInSlot(0);
+        ItemStack pants = player.inventory.armorInventory.get(1);
+        ItemStack shoes = player.inventory.armorInventory.get(0);
         if (pants.getItem() instanceof ArmorItem && shoes.getItem() instanceof ArmorItem) event.setCanceled(true);
       }
     }

@@ -1,13 +1,12 @@
 package com.tfar.walkthroughberries;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(WalkThroughBerries.MODID)
@@ -16,18 +15,15 @@ public class WalkThroughBerries {
   public static final String MODID = "walkthroughberries";
 
   public WalkThroughBerries() {
-    // Register ourselves for server and other game events we are interested in
-    MinecraftForge.EVENT_BUS.register(this);
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onInsideBlock);
   }
 
-  // You can use SubscribeEvent and let the Event Bus discover methods to call
-  @SubscribeEvent
-  public void onInsideBlock(LivingAttackEvent event) {
+  private void onInsideBlock(LivingAttackEvent event) {
     LivingEntity entity = event.getEntityLiving();
-    if (!(entity instanceof PlayerEntity)) return;
-    PlayerEntity player = (PlayerEntity) entity;
+    if (!(entity instanceof ServerPlayerEntity)) return;
+    ServerPlayerEntity player = (ServerPlayerEntity) entity;
     if (event.getSource().damageType.equals("sweetBerryBush")) {
-      if (player.isSneaking()) {
+      if (player.isCrouching()) {
         event.setCanceled(true);
       } else {
         ItemStack pants = player.inventory.armorInventory.get(1);
